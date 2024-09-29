@@ -41,12 +41,16 @@ def processPerms(arg: int) -> str:
                 v += i - arg
                 v %= n
                 andConditionParts.append(f"{var(i)} <= {var(v)}")
-            andCondition = " && ".join(andConditionParts)
-            orConditionParts.append(andCondition)
+            if andConditionParts:
+                andCondition = " && ".join(andConditionParts)
+                orConditionParts.append(andCondition)
         if len(orConditionParts) > 1:
             orConditionParts = [f"({part})" for part in orConditionParts]
-        orCondition = f"({' || '.join(orConditionParts)})"
-        multiplyCondition = f"{orCondition} * {var(i)}"
+        if orConditionParts:
+            orCondition = f"({' || '.join(orConditionParts)})"
+            multiplyCondition = f"{orCondition} * {var(i)}"
+        else:
+            multiplyCondition = var(i)
         dupeGuardParts = []
         for j in range(0, i):
             dupeGuardParts.append(f"{var(i)} != {var(j)}")
