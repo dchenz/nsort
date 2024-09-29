@@ -2,12 +2,12 @@ import argparse
 import itertools
 from typing import Iterator
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-n", type=int)
-args = parser.parse_args()
-n = args.n
 
-nums = list(range(n))
+def getArgs() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-n", type=int)
+    args = parser.parse_args()
+    return args
 
 
 def getPerms(arg: int) -> Iterator[tuple[tuple[int, ...], tuple[int, ...]]]:
@@ -58,27 +58,39 @@ def processPerms(arg: int) -> str:
     return sumExpr
 
 
-argExprParts = []
-for arg in nums:
-    argExprParts.append("        " + processPerms(arg))
-argExpr = ",\n".join(argExprParts)
+def main():
+    args = getArgs()
 
-formatExpr = " ".join("%d" for _ in nums)
-varsExpr = ", ".join(f"{var(v)}" for v in nums)
-varsPointersExpr = ", ".join(f"&{var(v)}" for v in nums)
+    global n
+    global nums
+    n = args.n
+    nums = list(range(n))
 
-prog = f"""
-#include <stdio.h>
+    argExprParts = []
+    for arg in nums:
+        argExprParts.append("        " + processPerms(arg))
+    argExpr = ",\n".join(argExprParts)
 
-int main() {{
-    int {varsExpr};
-    printf("Enter {n} numbers separated by space: ");
-    scanf("{formatExpr}", {varsPointersExpr});
-    printf("{formatExpr}\\n",
-{argExpr}
-    );
-    return 0;
-}}
-"""
+    formatExpr = " ".join("%d" for _ in nums)
+    varsExpr = ", ".join(f"{var(v)}" for v in nums)
+    varsPointersExpr = ", ".join(f"&{var(v)}" for v in nums)
 
-print(prog)
+    prog = f"""
+    #include <stdio.h>
+
+    int main() {{
+        int {varsExpr};
+        printf("Enter {n} numbers separated by space: ");
+        scanf("{formatExpr}", {varsPointersExpr});
+        printf("{formatExpr}\\n",
+    {argExpr}
+        );
+        return 0;
+    }}
+    """
+
+    print(prog)
+
+
+if __name__ == "__main__":
+    main()
