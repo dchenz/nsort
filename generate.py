@@ -79,19 +79,17 @@ def main():
     varsExpr = ", ".join(f"{var(v)}" for v in nums)
     varsPointersExpr = ", ".join(f"&{var(v)}" for v in nums)
 
-    prog = f"""
-    #include <stdio.h>
+    prog = f"""#include <stdio.h>
 
-    int main() {{
-        int {varsExpr};
-        printf("Enter {n} numbers separated by space: ");
-        scanf("{formatExpr}", {varsPointersExpr});
-        printf("{formatExpr}\\n",
-    {argExpr}
-        );
-        return 0;
-    }}
-    """
+int main() {{
+    int {varsExpr};
+    printf("Enter {n} numbers separated by space: ");
+    scanf("{formatExpr}", {varsPointersExpr});
+    printf("{formatExpr}\\n",
+{argExpr}
+    );
+    return 0;
+}}"""
 
     print(prog)
 
