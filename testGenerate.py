@@ -25,7 +25,7 @@ def main():
         )
         return result.stdout
 
-    numRange = list(range(-1000, 1000))
+    numRange = list(range(-args.n, args.n + 1))
 
     for i in range(10000):
         testCase = random.choices(numRange, k=args.n)
