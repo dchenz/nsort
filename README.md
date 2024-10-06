@@ -15,6 +15,9 @@ make build
 
 # Runs tests against the compiled binary.
 make test N=8
+
+# Runs all of the above.
+make N=8
 ```
 
 ## Examples

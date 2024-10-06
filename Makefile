@@ -1,5 +1,7 @@
 N ?= 3
 
+all: generate build test
+
 generate:
 	python3 generate.py -n ${N} > main.c
 
