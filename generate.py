@@ -10,8 +10,8 @@ def getArgs() -> argparse.Namespace:
     return args
 
 
-def getPerms(arg: int) -> Iterator[tuple[tuple[int, ...], tuple[int, ...]]]:
-    perms = list(itertools.permutations([v for v in nums if v != arg], n - 1))
+def getPerms(n: int, arg: int) -> Iterator[tuple[tuple[int, ...], tuple[int, ...]]]:
+    perms = list(itertools.permutations([v for v in range(n) if v != arg], n - 1))
     seen = set()
     for p in perms:
         lessThan = tuple(sorted(p[:arg]))
@@ -27,11 +27,11 @@ def var(v: int) -> str:
     return chr(ord("a") + v)
 
 
-def processPerms(arg: int) -> str:
+def processPerms(n: int, arg: int) -> str:
     sumExprParts = []
-    for i in nums:
+    for i in range(n):
         orConditionParts = []
-        for lessThan, greaterThan in getPerms(arg):
+        for lessThan, greaterThan in getPerms(n, arg):
             andConditionParts = []
             for v in lessThan:
                 v += i - arg
@@ -65,19 +65,16 @@ def processPerms(arg: int) -> str:
 def main():
     args = getArgs()
 
-    global n
-    global nums
     n = args.n
-    nums = list(range(n))
 
     argExprParts = []
-    for arg in nums:
-        argExprParts.append("        " + processPerms(arg))
+    for arg in range(n):
+        argExprParts.append("        " + processPerms(n, arg))
     argExpr = ",\n".join(argExprParts)
 
-    formatExpr = " ".join("%d" for _ in nums)
-    varsExpr = ", ".join(f"{var(v)}" for v in nums)
-    varsPointersExpr = ", ".join(f"&{var(v)}" for v in nums)
+    formatExpr = " ".join("%d" for _ in range(n))
+    varsExpr = ", ".join(f"{var(v)}" for v in range(n))
+    varsPointersExpr = ", ".join(f"&{var(v)}" for v in range(n))
 
     prog = f"""#include <stdio.h>
 
