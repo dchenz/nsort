@@ -12,7 +12,7 @@ def getArgs() -> argparse.Namespace:
 
 def getPerms(n: int, arg: int) -> Iterator[tuple[tuple[int, ...], tuple[int, ...]]]:
     perms = list(itertools.permutations([v for v in range(n) if v != arg], n - 1))
-    seen = set()
+    seen: set[tuple[tuple[int, ...], tuple[int, ...]]] = set()
     for p in perms:
         lessThan = tuple(sorted(p[:arg]))
         greaterThan = tuple(sorted(p[arg:]))
@@ -28,11 +28,11 @@ def var(v: int) -> str:
 
 
 def processPerms(n: int, arg: int) -> str:
-    sumExprParts = []
+    sumExprParts: list[str] = []
     for i in range(n):
-        orConditionParts = []
+        orConditionParts: list[str] = []
         for lessThan, greaterThan in getPerms(n, arg):
-            andConditionParts = []
+            andConditionParts: list[str] = []
             for v in lessThan:
                 v += i - arg
                 v %= n
@@ -51,7 +51,7 @@ def processPerms(n: int, arg: int) -> str:
             multiplyCondition = f"{orCondition} * {var(i)}"
         else:
             multiplyCondition = var(i)
-        dupeGuardParts = []
+        dupeGuardParts: list[str] = []
         for j in range(0, i):
             dupeGuardParts.append(f"{var(i)} != {var(j)}")
         dupeGuard = " && ".join(dupeGuardParts)
@@ -67,7 +67,7 @@ def main():
 
     n = args.n
 
-    argExprParts = []
+    argExprParts: list[str] = []
     for arg in range(n):
         argExprParts.append("        " + processPerms(n, arg))
     argExpr = ",\n".join(argExprParts)
