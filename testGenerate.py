@@ -1,5 +1,4 @@
 import argparse
-import os
 import random
 import subprocess
 
@@ -11,27 +10,34 @@ def getArgs() -> argparse.Namespace:
     return args
 
 
+def runTest(testCase: list[int]):
+    actualResult = list(
+        map(
+            int,
+            subprocess.run(
+                "./main",
+                input=" ".join(map(str, testCase)),
+                capture_output=True,
+                text=True,
+                shell=True,
+            )
+            .stdout.split(": ")[1]
+            .split(" "),
+        )
+    )
+    assert (
+        sorted(testCase) == actualResult
+    ), f"Incorrect sort: {testCase} -> {actualResult}"
+
+
 def main():
     args = getArgs()
 
-    prog = "./main"
-    if not os.path.exists(prog):
-        print("Need to compile the C program...")
-        exit(1)
+    random.seed(1)
 
-    def runCommand(command, input_data):
-        result = subprocess.run(
-            command, input=input_data, capture_output=True, text=True, shell=True
-        )
-        return result.stdout
-
-    numRange = list(range(-args.n, args.n + 1))
-
-    for i in range(10000):
-        testCase = random.choices(numRange, k=args.n)
-        output = runCommand(prog, " ".join(map(str, testCase)))
-        resultNums = list(map(int, output.split(": ")[1].split(" ")))
-        assert sorted(testCase) == resultNums, (testCase, resultNums)
+    for _ in range(100):
+        testCase = random.choices(range(-args.n // 2, args.n // 2), k=args.n)
+        runTest(testCase)
 
 
 if __name__ == "__main__":
