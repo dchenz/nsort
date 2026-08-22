@@ -11,9 +11,8 @@ def getArgs() -> argparse.Namespace:
 
 
 def getPerms(n: int, arg: int) -> Iterator[tuple[tuple[int, ...], tuple[int, ...]]]:
-    perms = list(itertools.permutations([v for v in range(n) if v != arg], n - 1))
     seen: set[tuple[tuple[int, ...], tuple[int, ...]]] = set()
-    for p in perms:
+    for p in itertools.permutations([v for v in range(n) if v != arg], n - 1):
         lessThan = tuple(sorted(p[:arg]))
         greaterThan = tuple(sorted(p[arg:]))
         key = (lessThan, greaterThan)
